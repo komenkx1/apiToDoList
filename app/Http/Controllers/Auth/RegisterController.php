@@ -19,7 +19,7 @@ class RegisterController extends Controller
       ]);
       
       if ($validator->fails()) {
-         return response()->json($validator->errors(), 404);
+         return response()->json($validator->errors());
       }else{
         $userData = $request->all();
 
