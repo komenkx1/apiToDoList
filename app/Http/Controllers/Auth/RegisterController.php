@@ -11,6 +11,7 @@ class RegisterController extends Controller
 {
     public function register(Request $request)
     {
+      $response = [];
         $validator = Validator::make($request->all(), [
             "name" => ["required","string"],
             "email" => ["required", "string","email", "unique:users"],
@@ -19,7 +20,10 @@ class RegisterController extends Controller
       ]);
       
       if ($validator->fails()) {
-         return response()->json($validator->errors(), 404);
+        return response()->json(
+          $response["message"] = $validator->errors(),
+          $response["data"] = "null"
+        );
       }else{
         $userData = $request->all();
 
@@ -30,7 +34,10 @@ class RegisterController extends Controller
             "password" => bcrypt($userData["password"]),
         ]);
 
-        return json_encode($newUser);
+        return response()->json(
+          $response["message"] = "success",
+          $response["data"] = $newUser
+        );
       }
 
       
