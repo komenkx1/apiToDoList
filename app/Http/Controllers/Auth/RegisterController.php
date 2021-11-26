@@ -20,10 +20,9 @@ class RegisterController extends Controller
       ]);
       
       if ($validator->fails()) {
-        return response()->json(
-          $response["message"] = $validator->errors(),
-          $response["data"] = "null"
-        );
+        $response["message"] = $validator->errors();
+        $response["data"] = null;
+        return json_encode($response);
       }else{
         $userData = $request->all();
 
@@ -34,11 +33,10 @@ class RegisterController extends Controller
             "password" => bcrypt($userData["password"]),
         ]);
 
-        return response()->json(
-          $response["message"] = "success",
-          $response["data"] = $newUser
-        );
+        $response["message"] = "success";
+        $response["data"] = $userData;
       }
+      return json_encode($response);
 
       
     }
