@@ -20,7 +20,7 @@ class RegisterController extends Controller
       ]);
       
       if ($validator->fails()) {
-        $response["message"] = $validator->errors();
+        $response["message"] =  $validator->errors()->all();
         $response["data"] = null;
         return json_encode($response);
       }else{
@@ -33,7 +33,7 @@ class RegisterController extends Controller
             "password" => bcrypt($userData["password"]),
         ]);
 
-        $response["message"] = "success";
+        $response["message"] = ["success"];
         $response["data"] = $userData;
       }
       return json_encode($response);
