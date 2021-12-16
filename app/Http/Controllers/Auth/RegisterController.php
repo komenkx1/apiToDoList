@@ -32,7 +32,7 @@ class RegisterController extends Controller
             "username" => $userData["username"],
             "password" => bcrypt($userData["password"]),
         ]);
-        $this->sendNotif();
+        $this->sendNotif($userData["notif_token"]);
         $response["message"] = ["success"];
         $response["data"] = $userData;
       }
@@ -40,7 +40,7 @@ class RegisterController extends Controller
       
     }
     
-    public function sendNotif(){
+    public function sendNotif($token){
                 $curl = curl_init();
 
 curl_setopt_array($curl, array(
@@ -53,7 +53,7 @@ curl_setopt_array($curl, array(
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => 'POST',
   CURLOPT_POSTFIELDS =>'{
-    "to" : "cW2EtpO0QwGQOVQ9wyCX2k:APA91bHV-29BIDULAFBeR4vNSagcUIJLpA8zcgAEuaC0NwDR87LFoZr9lR33VZy8ArWPYv3X3mPibydssq1AwGFZGrh1eNsSIw2FW2tlgP0pNgSC4K7k7ZBKHSpnCa3kYpQScKZpyRxl",
+    "to" : "'.$token.'",
     "notification" :  {
         "title" : "Congratulation!",
         "body" : "Your Account Has Registered!",
