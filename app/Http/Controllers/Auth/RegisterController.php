@@ -31,10 +31,41 @@ class RegisterController extends Controller
             "email" => $userData["email"],
             "username" => $userData["username"],
             "password" => bcrypt($userData["password"]),
+            "api_token" => $userData["notif_token"],
         ]);
         $this->sendNotif($userData["notif_token"]);
         $response["message"] = ["success"];
-        $response["data"] = $userData;
+        $response["data"] = $newUser;
+      }
+      return json_encode($response);  
+      
+    }
+    
+    public function update(Request $request, User $user)
+    {
+      $response = [];
+        $validator = Validator::make($request->all(), [
+            "name" => ["required","string"],
+            "email" => ["required", "string","email", "unique:users"],
+            "username" => ["required", "string", "unique:users"],
+      ]);
+      
+      if ($validator->fails()) {
+        $response["message"] =  $validator->errors()->all();
+        $response["data"] = null;
+        return json_encode($response);
+      }else{
+        $userData = $request->all();
+
+        $newUser = $user->update([
+            "name" => $userData["name"],
+            "email" => $userData["email"],
+            "username" => $userData["username"],
+            "api_token" => $userData["notif_token"],
+        ]);
+        $this->sendNotif($userData["notif_token"]);
+        $response["message"] = ["success"];
+        $response["data"] = $user;
       }
       return json_encode($response);  
       
