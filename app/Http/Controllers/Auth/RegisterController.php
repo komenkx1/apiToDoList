@@ -71,6 +71,31 @@ class RegisterController extends Controller
       
     }
     
+    public function updateNotifToken(Request $request, User $user)
+    {
+      $response = [];
+        $validator = Validator::make($request->all(), [
+            "notif_token" => ["required", "string"],
+      ]);
+      
+      if ($validator->fails()) {
+        $response["message"] =  $validator->errors()->all();
+        $response["data"] = null;
+        return json_encode($response);
+      }else{
+        $userData = $request->all();
+
+        $newUser = $user->update([
+            "api_token" => $userData["notif_token"],
+        ]);
+ 
+        $response["message"] = ["success"];
+        $response["data"] = $user;
+      }
+      return json_encode($response);  
+      
+    }
+    
     public function sendNotif($token){
                 $curl = curl_init();
 
