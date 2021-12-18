@@ -22,4 +22,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [RegisterController::class,"register"])->name("register");
 Route::patch('user/{user:id}', [RegisterController::class,"update"])->name("update");
+Route::patch('user/api-update/{user:id}', [RegisterController::class,"updateNotifToken"])->name("updateNotifToken");
 Route::post('login', [LoginController::class,"login"])->name("login");
