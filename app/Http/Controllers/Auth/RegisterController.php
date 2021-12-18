@@ -9,123 +9,35 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    public function register(Request $request)
-    {
-      $response = [];
-        $validator = Validator::make($request->all(), [
-            "name" => ["required","string"],
-            "email" => ["required", "string","email", "unique:users"],
-            "username" => ["required", "string", "unique:users"],
-            "password" => ["required", "confirmed"],
+  public function register(Request $request)
+  {
+    $response = [];
+    $validator = Validator::make($request->all(), [
+      "name" => ["required", "string"],
+      "email" => ["required", "string", "email", "unique:users"],
+      "username" => ["required", "string", "unique:users"],
+      "password" => ["required", "confirmed"],
+      "notif_token" => ["required", "string"],
+    ]);
+
+    if ($validator->fails()) {
+      $response["message"] =  $validator->errors()->all();
+      $response["data"] = null;
+      return json_encode($response);
+    } else {
+      $userData = $request->all();
+
+      $newUser = User::create([
+        "name" => $userData["name"],
+        "email" => $userData["email"],
+        "username" => $userData["username"],
+        "password" => bcrypt($userData["password"]),
+        "api_token" => $userData["notif_token"],
       ]);
-      
-      if ($validator->fails()) {
-        $response["message"] =  $validator->errors()->all();
-        $response["data"] = null;
-        return json_encode($response);
-      }else{
-        $userData = $request->all();
 
-        $newUser = User::create([
-            "name" => $userData["name"],
-            "email" => $userData["email"],
-            "username" => $userData["username"],
-            "password" => bcrypt($userData["password"]),
-            "api_token" => $userData["notif_token"],
-        ]);
-        $this->sendNotif($userData["notif_token"]);
-        $response["message"] = ["success"];
-        $response["data"] = $newUser;
-      }
-      return json_encode($response);  
-      
+      $response["message"] = ["success"];
+      $response["data"] = $newUser;
     }
-    
-    public function update(Request $request, User $user)
-    {
-      $response = [];
-        $validator = Validator::make($request->all(), [
-            "name" => ["required","string"],
-            "email" => ["required", "string","email", "unique:users"],
-            "username" => ["required", "string", "unique:users"],
-      ]);
-      
-      if ($validator->fails()) {
-        $response["message"] =  $validator->errors()->all();
-        $response["data"] = null;
-        return json_encode($response);
-      }else{
-        $userData = $request->all();
-
-        $newUser = $user->update([
-            "name" => $userData["name"],
-            "email" => $userData["email"],
-            "username" => $userData["username"],
-            "api_token" => $userData["notif_token"],
-        ]);
-        $this->sendNotif($userData["notif_token"]);
-        $response["message"] = ["success"];
-        $response["data"] = $user;
-      }
-      return json_encode($response);  
-      
-    }
-    
-    public function updateNotifToken(Request $request, User $user)
-    {
-      $response = [];
-        $validator = Validator::make($request->all(), [
-            "notif_token" => ["required", "string"],
-      ]);
-      
-      if ($validator->fails()) {
-        $response["message"] =  $validator->errors()->all();
-        $response["data"] = null;
-        return json_encode($response);
-      }else{
-        $userData = $request->all();
-
-        $newUser = $user->update([
-            "api_token" => $userData["notif_token"],
-        ]);
- 
-        $response["message"] = ["success"];
-        $response["data"] = $user;
-      }
-      return json_encode($response);  
-      
-    }
-    
-    public function sendNotif($token){
-                $curl = curl_init();
-
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://fcm.googleapis.com/fcm/send',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => '',
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 0,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS =>'{
-    "to" : "'.$token.'",
-    "notification" :  {
-        "title" : "Congratulation!",
-        "body" : "Your Account Has Registered!",
-        "content_available" : true,
-        "priority" : "high"
-    }
-
-}',
-  CURLOPT_HTTPHEADER => array(
-    'Authorization: key=AAAAoiFYj0A:APA91bE0hclV8uY5igrD-n1wK4gXM0NlCdy8cHi45SX5k1mifHkz6aZnDTVeb_6wLbgtbSNdjlPzQR1XMsAhXLGxLz68W52XDtk1vxRYs-7-z88ho33IDZoaSUrsOJZbFdFlAwNPb7O_',
-    'Content-Type: application/json'
-  ),
-));
-
-curl_exec($curl);
-
-curl_close($curl);
-    }
+    return json_encode($response);
+  }
 }
