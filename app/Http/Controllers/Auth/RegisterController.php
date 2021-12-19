@@ -14,7 +14,6 @@ class RegisterController extends Controller
     $response = [];
     $validator = Validator::make($request->all(), [
       "name" => ["required", "string"],
-      "email" => ["required", "string", "email", "unique:users"],
       "username" => ["required", "string", "unique:users"],
       "password" => ["required", "confirmed"],
       "notif_token" => ["required", "string"],
@@ -23,13 +22,12 @@ class RegisterController extends Controller
     if ($validator->fails()) {
       $response["message"] =  $validator->errors()->all();
       $response["data"] = null;
-      return json_encode($response);
+      return response()->json($response);
     } else {
       $userData = $request->all();
 
       $newUser = User::create([
         "name" => $userData["name"],
-        "email" => $userData["email"],
         "username" => $userData["username"],
         "password" => bcrypt($userData["password"]),
         "api_token" => $userData["notif_token"],
@@ -38,6 +36,6 @@ class RegisterController extends Controller
       $response["message"] = ["success"];
       $response["data"] = $newUser;
     }
-    return json_encode($response);
+    return response()->json($response);
   }
 }

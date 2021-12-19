@@ -21,7 +21,6 @@ class User extends Authenticatable
     protected $fillable = [
         'api_token',
         'name',
-        'email',
         'username',
         'password',
     ];
@@ -41,12 +40,14 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-    
+
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function loginToken()
+    {
+        return $this->hasOne(LoginToken::class);
     }
 }
