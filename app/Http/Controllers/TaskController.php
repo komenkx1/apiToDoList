@@ -2,84 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
 use Illuminate\Http\Request;
+use App\Models\Task;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $data = Task::all();
+        $response["message"] = true;
+        $response["result"] = [$data];
+        return json_encode($response);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $task = new Task;
+        $task->title = $request->title;
+        $task->content = $request->content;
+        $task->date = $request->date;
+        $task->user_id = $request->user_id;
+        $task->save();
+
+        $response["message"] = "success";
+
+        return json_encode($response);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function update(Request $request, $id)
     {
-        //
+        $title = $request->title;
+        $content = $request->content;
+        $date_end = $request->date_end;
+
+        $task = Task::find($id);
+        $task->title = $title;
+        $task->content = $content;
+        $task->date_end = $date_end;
+
+        $task->save();
+
+        $response["message"] = "success";
+
+        return json_encode($response);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Task $task)
+    public function delete($id)
     {
-        //
+        $task = Task::find($id);
+        $task->delete();
+
+        $response["message"] = "success";
+
+        return json_encode($response);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
+    public function last_seen($id)
     {
-        //
-    }
+        $task = Task::find($id);
+        $task->date_history = Carbon::now()->toDateTimeString();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Task $task)
-    {
-        //
-    }
+        $task->save();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Task $task)
-    {
-        //
+        $response["message"] = "success";
+
+        return json_encode($response);
     }
 }
