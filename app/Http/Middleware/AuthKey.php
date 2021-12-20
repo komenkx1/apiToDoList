@@ -17,7 +17,7 @@ class AuthKey
      */
     public function handle(Request $request, Closure $next)
     {
-        $token = LoginToken::where("token",$request->header("LOGIN_TOKEN"))->first();
+        $token = LoginToken::where("token",$request->header("Token-Login"))->first();
         if(!$token){
             return response()->json(["message" => "not authorized"], 401);
         }

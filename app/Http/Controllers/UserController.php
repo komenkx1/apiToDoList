@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\LoginToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,7 +37,7 @@ class UserController extends Controller
       return json_encode($response);
     }
   
-    public function updateNotifToken(Request $request, User $user)
+    public function updateNotifToken(Request $request)
     {
       $response = [];
       $validator = Validator::make($request->all(), [
@@ -49,7 +50,9 @@ class UserController extends Controller
         return json_encode($response);
       } else {
         $userData = $request->all();
-  
+        $loginData =  LoginToken::with('user')->where('token', $request->token)->first();
+        $user = $loginData->user;
+ 
         $user->update([
           "api_token" => $userData["notif_token"],
         ]);

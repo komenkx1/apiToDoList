@@ -31,9 +31,9 @@ class LoginController extends Controller
       if (Auth::attempt($credentials)) {
         $userData = User::where('username', $request->username)->first();
 
-        $userLoggedToken = LoginToken::updateOrCreate(
-          ['user_id' => $userData->id],
-          ['token' => (new Token())->Unique('login_tokens', 'token', 60)]
+        $userLoggedToken = LoginToken::Create(
+          ['user_id' => $userData->id,
+          'token' => (new Token())->Unique('login_tokens', 'token', 60)]
         );
 
         $userData["loggedToken"] = $userLoggedToken->token;
@@ -45,5 +45,11 @@ class LoginController extends Controller
       }
     }
     return response()->json($response);
+  }
+  
+  public function logout(Request $request){
+      $loginData = LoginToken::where("token",$request->header("Token-Login"))->first();
+    //   dd($loginData);
+      $loginData->delete();
   }
 }
