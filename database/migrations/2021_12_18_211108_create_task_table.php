@@ -18,7 +18,6 @@ class CreateTaskTable extends Migration
             $table->string("title");
             $table->date("date");
             $table->string("content");
-            $table->date("date_history");
             $table->timestamps();
         });
     }
