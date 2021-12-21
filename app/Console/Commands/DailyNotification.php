@@ -40,7 +40,7 @@ class DailyNotification extends Command
     public function handle()
     {
         $expDate = Carbon::now();
-        $dataTask = Task::whereDate('date_history', '<', $expDate)->get();
+        $dataTask = Task::whereDate('updated_at', '<', Carbon::today())->get();
         foreach ($dataTask as $task) {
             $this->sendNotif($task->user->api_token, $task->user->username, $task->title);
         }
