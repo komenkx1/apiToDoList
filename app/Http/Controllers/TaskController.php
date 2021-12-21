@@ -21,10 +21,11 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = 1;
+            $task = new Task();
+            $task = DB::table('task')->where('user_id', '=', $id)->get();
             return response()->json([
                 'message' => true,
-                'result' => $data
+                'result' => $task
             ], 200);
         }
     }
