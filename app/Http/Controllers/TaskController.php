@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class TaskController extends Controller
 {
@@ -19,13 +20,16 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = Task::where("user_id", $id)->first();
-            return response()->json([
-                'message' => true,
-                'result' => $data,
-                'id' => $id,
-                'token' => $token_login
-            ], 200);
+            $data = Task::where("user_id", $id);
+            // return response()->json([
+            //     'message' => true,
+            //     'result' => $data,
+            //     'id' => $id,
+            //     'token' => $token_login
+            // ], 200);
+            $response["result"] = $data;
+            $response["message"] = True;
+            return json_encode($response);
         }
     }
 
