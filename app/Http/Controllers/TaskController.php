@@ -16,7 +16,7 @@ class TaskController extends Controller
     {
         $token_login = $request->header("Token-Login");
         // $id = DB::select("SELECT user_id FROM `login_tokens` WHERE token=" . "'" . $token_login . "'")->get();
-        $id = DB::table('login_tokens')->where('token', '=', $token_login)->get();
+        $id = DB::table('login_tokens')->where('token', '=', $token_login)->first();
         $id = $id['user_id'];
         if (is_null($id)) {
             return response()->json([
