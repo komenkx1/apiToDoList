@@ -19,7 +19,7 @@ class CreateTasksTable extends Migration
             $table->string("title");
             $table->date("date");
             $table->string("content");
-            $table->timestamp("date_history", 0)->nullable();
+            $table->boolean("completed");
             $table->timestamps();
             $table->foreignIdFor(User::class);
         });
