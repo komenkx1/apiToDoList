@@ -12,6 +12,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $id = LoginToken::where("token", $request->header("Token-Login"));
+        $token_login = $request->header("Token-Login");
         if (is_null($id)) {
             return response()->json([
                 'message' => false
@@ -21,7 +22,8 @@ class TaskController extends Controller
             return response()->json([
                 'message' => true,
                 'result' => $data,
-                'id' => $id->user_id
+                'id' => $id->user_id,
+                'token' => $token_login
             ], 200);
         }
     }
