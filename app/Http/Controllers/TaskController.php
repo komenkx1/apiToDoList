@@ -22,8 +22,7 @@ class TaskController extends Controller
             ], 403);
         } else {
             $data = [];
-            $data = DB::select("SELECT * FROM `tasks` WHERE user_id=" . "'" . $id . "'");
-            dd($data);
+            $data = Task::where("user_id", $id)->get();
             return response()->json([
                 'message' => true,
                 'result' => $data,
