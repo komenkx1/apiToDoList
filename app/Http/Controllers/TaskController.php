@@ -21,8 +21,7 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = [];
-            $data = json_encode(Task::where("user_id", $id)->get());
+            $data = DB::select("SELECT * FROM `tasks` WHERE user_id=" . "'" . $id . "'");
             // dd($data);
             return response()->json([
                 'message' => true,
@@ -30,9 +29,6 @@ class TaskController extends Controller
                 'id' => $id,
                 'token' => $token_login
             ], 200);
-            // $response["result"] = $data["data"];
-            // $response["message"] = True;
-            // return json_encode($response);
         }
     }
 
