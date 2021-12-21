@@ -21,17 +21,16 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = Task::where("user_id", $id);
-            // return response()->json([
-            //     'message' => true,
-            //     'result' => $data,
-            //     'id' => $id,
-            //     'token' => $token_login
-            // ], 200);
+            $data = Task::where("user_id", $id)->get();
+            return response()->json([
+                'message' => true,
+                'result' => $data,
+                'id' => $id,
+                'token' => $token_login
+            ], 200);
             // $response["result"] = $data["data"];
             // $response["message"] = True;
             // return json_encode($response);
-            return Task::where("user_id", $id);
         }
     }
 
