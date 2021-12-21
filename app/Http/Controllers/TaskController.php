@@ -19,7 +19,7 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = Task::where("user_id", $id);
+            $data = Task::where("user_id", $id)->first();
             return response()->json([
                 'message' => true,
                 'result' => $data,
