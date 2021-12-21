@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TaskResource;
 use App\Models\LoginToken;
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -20,17 +21,17 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = [];
-            $data["data"] = DB::select("SELECT * FROM `tasks` WHERE user_id=" . "'" . $id . "'");
+            $data = Task::where("user_id", $id);
             // return response()->json([
             //     'message' => true,
             //     'result' => $data,
             //     'id' => $id,
             //     'token' => $token_login
             // ], 200);
-            $response["result"] = $data["data"];
-            $response["message"] = True;
-            return json_encode($response);
+            // $response["result"] = $data["data"];
+            // $response["message"] = True;
+            // return json_encode($response);
+            return response()->json([TaskResource::collection($data), 'Tasks fetched.']);
         }
     }
 
