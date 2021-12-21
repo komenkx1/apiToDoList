@@ -15,7 +15,8 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $token_login = $request->header("Token-Login");
-        $id = DB::select("SELECT user_id FROM `login_tokens` WHERE token=" . "'" . $token_login . "'");
+        // $id = DB::select("SELECT user_id FROM `login_tokens` WHERE token=" . "'" . $token_login . "'")->get();
+        $id = DB::table('login_tokens')->where('token', '=', $token_login)->get();
         if (is_null($id)) {
             return response()->json([
                 'message' => false
@@ -23,11 +24,11 @@ class TaskController extends Controller
         } else {
             $task = new Task();
             $task = DB::table('tasks')->where('user_id', '=', 5)->get();
-            // return response()->json([
-            //     'message' => true,
-            //     'result' => $task
-            // ], 200);
-            return json_encode($task);
+            return response()->json([
+                'message' => true,
+                'result' => $task,
+                'id' => $id
+            ], 200);
         }
     }
 
