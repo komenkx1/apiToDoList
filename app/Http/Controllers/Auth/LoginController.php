@@ -13,43 +13,46 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-  public function login(Request $request)
-  {
-    $response = [];
-    $validator = Validator::make($request->all(), [
-      "username" => ["required", "string"],
-      "password" => ["required"],
-    ]);
+    public function login(Request $request)
+    {
+        $response = [];
+        $validator = Validator::make($request->all(), [
+            "username" => ["required", "string"],
+            "password" => ["required"],
+        ]);
 
-    if ($validator->fails()) {
-      $response["message"] =  $validator->errors()->all();
-      $response["data"] = null;
-      return response()->json($response);
-    } else {
-      $credentials = $request->only('username', 'password');
+        if ($validator->fails()) {
+            $response["message"] =  $validator->errors()->all();
+            $response["data"] = null;
+            return response()->json($response);
+        } else {
+            $credentials = $request->only('username', 'password');
 
-      if (Auth::attempt($credentials)) {
-        $userData = User::where('username', $request->username)->first();
+            if (Auth::attempt($credentials)) {
+                $userData = User::where('username', $request->username)->first();
 
-        $userLoggedToken = LoginToken::Create(
-          ['user_id' => $userData->id,
-          'token' => (new Token())->Unique('login_tokens', 'token', 60)]
-        );
+                $userLoggedToken = LoginToken::Create(
+                    [
+                        'user_id' => $userData->id,
+                        'token' => (new Token())->Unique('login_tokens', 'token', 60)
+                    ]
+                );
 
-        $userData["loggedToken"] = $userLoggedToken->token;
-        $response["message"] = [true];
-        $response["data"] = $userData;
-      } else {
-        $response["message"] = ["password or username is false"];
-        $response["data"] = null;
-      }
+                $userData["loggedToken"] = $userLoggedToken->token;
+                $response["message"] = [true];
+                $response["data"] = $userData;
+            } else {
+                $response["message"] = ["password or username is false"];
+                $response["data"] = null;
+            }
+        }
+        return response()->json($response);
     }
-    return response()->json($response);
-  }
-  
-  public function logout(Request $request){
-      $loginData = LoginToken::where("token",$request->header("Token-Login"))->first();
-    //   dd($loginData);
-      $loginData->delete();
-  }
+
+    public function logout(Request $request)
+    {
+        $loginData = LoginToken::where("token", $request->header("Token-Login"))->first();
+        //   dd($loginData);
+        $loginData->delete();
+    }
 }
