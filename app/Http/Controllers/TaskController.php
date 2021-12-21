@@ -6,13 +6,14 @@ use App\Models\LoginToken;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $id = LoginToken::where("token", $request->header("Token-Login"));
         $token_login = $request->header("Token-Login");
+        $id = DB::select("SELECT user_id FROM `login_tokens` WHERE token=" . $token_login);
         if (is_null($id)) {
             return response()->json([
                 'message' => false
