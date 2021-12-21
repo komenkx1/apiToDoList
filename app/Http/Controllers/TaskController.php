@@ -11,12 +11,18 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $id = LoginToken::find($request->header("Token-Login"))->first();
-        $data = Task::where("user_id", $id);
-        return response()->json([
-            'message' => true,
-            'result' => $data
-        ], 200);
+        $id = LoginToken::where("token", $request->header("Token-Login"));
+        if ($id->is_null()) {
+            return response()->json([
+                'message' => false
+            ], 403);
+        } else {
+            $data = Task::where("user_id", $id);
+            return response()->json([
+                'message' => true,
+                'result' => $data
+            ], 200);
+        }
     }
 
     public function create(Request $request)
