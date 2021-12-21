@@ -12,7 +12,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $id = LoginToken::where("token", $request->header("Token-Login"));
-        if ($id->is_null()) {
+        if (is_null($id)) {
             return response()->json([
                 'message' => false
             ], 403);
