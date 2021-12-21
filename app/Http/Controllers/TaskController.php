@@ -22,7 +22,7 @@ class TaskController extends Controller
             ], 403);
         } else {
             $task = new Task();
-            $task = DB::table('tasks')->where('user_id', '=', $id)->first();
+            $task = DB::table('tasks')->where('user_id', '=', 5)->get();
             // return response()->json([
             //     'message' => true,
             //     'result' => $task
