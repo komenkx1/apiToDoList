@@ -21,7 +21,7 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = json_encode(Task::where("user_id", "=", "$id")->get());
+            $data = 1;
             return response()->json([
                 'message' => true,
                 'result' => $data
