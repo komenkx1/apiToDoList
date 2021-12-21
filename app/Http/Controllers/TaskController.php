@@ -18,11 +18,11 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
-            $data = Task::where("user_id", $id->user_id);
+            $data = Task::where("user_id", $id);
             return response()->json([
                 'message' => true,
                 'result' => $data,
-                'id' => $id->user_id,
+                'id' => $id,
                 'token' => $token_login
             ], 200);
         }
