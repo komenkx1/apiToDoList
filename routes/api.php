@@ -30,10 +30,9 @@ Route::post('login', [LoginController::class, "login"])->name("login");
 
 Route::middleware('authApi:api')->group(function () {
     Route::delete('logout', [LoginController::class, "logout"])->name("logout");
+    Route::post('get-task', [TaskController::class, "index"])->name("index_task");
+    Route::post('task', [TaskController::class, "create"])->name("create_task");
+    Route::put('/task/{id}', [TaskController::class, "update"])->name("update_task");
+    Route::delete('/task/{id}', [TaskController::class, "delete"])->name("delete_task");
+    Route::put('/task/lastseen/{id}', [TaskController::class, "last_seen"])->name("last_seen_task");
 });
-
-Route::post('get-task', [TaskController::class, "index"])->name("index_task");
-Route::post('task', [TaskController::class, "create"])->name("create_task");
-Route::put('/task/{id}', [TaskController::class, "update"])->name("update_task");
-Route::delete('/task/{id}', [TaskController::class, "delete"])->name("delete_task");
-Route::put('/task/lastseen/{id}', [TaskController::class, "last_seen"])->name("last_seen_task");
