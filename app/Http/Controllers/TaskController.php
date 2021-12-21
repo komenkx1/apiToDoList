@@ -31,7 +31,7 @@ class TaskController extends Controller
             // $response["result"] = $data["data"];
             // $response["message"] = True;
             // return json_encode($response);
-            return response()->json([TaskResource::collection($data), 'Tasks fetched.']);
+            return Task::where("user_id", $id);
         }
     }
 
