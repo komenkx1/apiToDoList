@@ -20,6 +20,7 @@ class TaskController extends Controller
                 'message' => false
             ], 403);
         } else {
+            $data = [];
             $data = DB::select("SELECT * FROM `tasks` WHERE user_id=" . "'" . $id . "'");
             // return response()->json([
             //     'message' => true,
