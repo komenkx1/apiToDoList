@@ -21,14 +21,14 @@ class TaskController extends Controller
             ], 403);
         } else {
             $data = [];
-            $data = DB::select("SELECT * FROM `tasks` WHERE user_id=" . "'" . $id . "'");
+            $data["data"] = DB::select("SELECT * FROM `tasks` WHERE user_id=" . "'" . $id . "'");
             // return response()->json([
             //     'message' => true,
             //     'result' => $data,
             //     'id' => $id,
             //     'token' => $token_login
             // ], 200);
-            $response["result"] = $data;
+            $response["result"] = $data["data"];
             $response["message"] = True;
             return json_encode($response);
         }
