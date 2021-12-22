@@ -24,7 +24,7 @@ class TaskController extends Controller
             ], 403);
         } else {
             $task = new Task();
-            $task = DB::table('tasks')->where('user_id', '=', $id)->get();
+            $task = DB::table('tasks')->where('user_id', '=', $id)->sortByDesc('updated_at')->get();
             return response()->json([
                 'message' => true,
                 'result' => $task,
@@ -34,7 +34,9 @@ class TaskController extends Controller
 
     public function create(Request $request)
     {
-        $id = LoginToken::find($request->header("Token-Login"))->first();
+        $token_login = $request->header("Token-Login");
+        $id = DB::table('login_tokens')->where('token', '=', $token_login)->first();
+        $id = $id->user_id;
         $task = new Task;
         $task->title = $request->title;
         $task->content = $request->content;
