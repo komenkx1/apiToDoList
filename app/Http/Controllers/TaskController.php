@@ -59,12 +59,12 @@ class TaskController extends Controller
     {
         $title = $request->title;
         $content = $request->content;
-        $date_end = $request->date_end;
+        $date = $request->date;
 
         $task = Task::find($request->id);
         $task->title = $title;
         $task->content = $content;
-        $task->date_end = $date_end;
+        $task->date = $date;
 
         $task->save();
 
