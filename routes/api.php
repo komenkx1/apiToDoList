@@ -30,7 +30,8 @@ Route::post('login', [LoginController::class, "login"])->name("login");
 
 Route::middleware('authApi:api')->group(function () {
     Route::delete('logout', [LoginController::class, "logout"])->name("logout");
-    Route::get('get-task', [TaskController::class, "index"])->name("index_task");
+    Route::get('task-active', [TaskController::class, "indexActive"])->name("index_task_active");
+    Route::get('task-completed', [TaskController::class, "indexCompleted"])->name("index_task_completed");
     Route::post('task', [TaskController::class, "create"])->name("create_task");
     Route::put('task', [TaskController::class, "update"])->name("update_task");
     Route::delete('/deletetask', [TaskController::class, "delete"])->name("delete_task");
