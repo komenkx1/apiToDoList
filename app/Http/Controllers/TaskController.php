@@ -37,10 +37,13 @@ class TaskController extends Controller
         $token_login = $request->header("Token-Login");
         $id = DB::table('login_tokens')->where('token', '=', $token_login)->first();
         $id = $id->user_id;
+        $date = $request->date;
+        $parse_date = Carbon::parse($date);
+        $date = $parse_date->format('YYYY-MM-DD');
         $task = new Task;
         $task->title = $request->title;
         $task->content = $request->content;
-        $task->date = $request->date;
+        $task->date = $date;
         $task->complated = 0;
         $task->user_id = $id;
         $task->updated_at = Carbon::now()->toDateTimeString();
