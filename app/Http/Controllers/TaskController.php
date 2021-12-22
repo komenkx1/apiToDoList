@@ -99,13 +99,16 @@ class TaskController extends Controller
 
     public function complete_task(Request $request)
     {
-        $task = Task::find($request->id);
-        $task->completed = 1;
-        $task->save();
+        // $task = Task::find($request->id);
+        // $task->completed = 1;
+        // $task->save();
+        $id = $request->id;
+        Task::where('id', $id)->update(array('completed' => 1));
 
         return response()->json([
             'message' => true,
-            'result' => "OK"
+            'result' => "OK",
+            'id' => $id
         ], 200);
     }
 
