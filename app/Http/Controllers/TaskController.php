@@ -25,7 +25,7 @@ class TaskController extends Controller
             ], 403);
         } else {
             $task = new Task();
-            $task = DB::table('tasks')->where([['user_id', '=', $id], ['completed' => 0]])->orderBy('updated_at', 'desc')->get();
+            $task = DB::table('tasks')->where([['user_id', '=', $id], ['completed', '=', '0']])->orderBy('updated_at', 'desc')->get();
             return response()->json([
                 'message' => true,
                 'result' => $task,
@@ -45,7 +45,7 @@ class TaskController extends Controller
             ], 403);
         } else {
             $task = new Task();
-            $task = DB::table('tasks')->where([['user_id', '=', $id], ['completed' => 1]])->orderBy('updated_at', 'desc')->get();
+            $task = DB::table('tasks')->where([['user_id', '=', $id], ['completed', '=', '1']])->orderBy('updated_at', 'desc')->get();
             return response()->json([
                 'message' => true,
                 'result' => $task,
