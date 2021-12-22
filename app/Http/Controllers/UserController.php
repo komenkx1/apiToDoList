@@ -3,19 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use App\Models\LoginToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function update(Request $request, User $user)
+    public function update(Request $request)
     {
+     $userData = $request->all();
+     $loginData =  LoginToken::with('user')->where('token', $request->token)->first();
+     $user = $loginData->user;
+        
       $response = [];
       $validator = Validator::make($request->all(), [
         "name" => ["required", "string"],
-        "email" => ["required", "string", "email", "unique:users"],
-        "username" => ["required", "string", "unique:users"],
+        "username" => ["required", "string",'unique:users,username,' . $user->id],
+        "old_password" => ["required_with:new_password"],
+        "new_password" => ["required_with:old_password"],
       ]);
   
       if ($validator->fails()) {
@@ -23,16 +29,34 @@ class UserController extends Controller
         $response["data"] = null;
         return json_encode($response);
       } else {
-        $userData = $request->all();
-  
+       
+        
+      if(isset($userData["old_password"])){
+        if (Hash::check($userData["old_password"], $user->password)) {
+            $user->update([
+              "name" => $userData["name"],
+              "username" => $userData["username"],
+              "password" => bcrypt($userData["new_password"])
+            ]);
+    
+            $response["message"] = ["success update with password"];
+            $user["loggedToken"] = $request->token;
+            $response["data"] = $user;
+        }else{
+                $response["message"] = ["Your Old Password Is Wrong!"];
+                $response["data"] = null;
+        }
+      }else{
         $user->update([
-          "name" => $userData["name"],
-          "email" => $userData["email"],
-          "username" => $userData["username"],
+         "name" => $userData["name"],
+         "username" => $userData["username"],
         ]);
-        $this->sendNotif($userData["notif_token"]);
-        $response["message"] = ["success"];
-        $response["data"] = $user;
+            $user["loggedToken"] = $request->token;
+            $response["message"] = ["success update"];
+            $response["data"] = $user;
+      }
+     
+
       }
       return json_encode($response);
     }
