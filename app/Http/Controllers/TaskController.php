@@ -7,6 +7,7 @@ use App\Models\LoginToken;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use phpDocumentor\Reflection\PseudoTypes\True_;
 
@@ -99,28 +100,35 @@ class TaskController extends Controller
 
     public function complete_task(Request $request)
     {
-        // $task = Task::find($request->id);
-        // $task->completed = 1;
-        // $task->save();
         $id = $request->id;
-        Task::where('id', $id)->update(array('completed' => 1));
-
-        return response()->json([
-            'message' => true,
-            'result' => "OK",
-            'id' => $id
-        ], 200);
+        try {
+            Task::where('id', $id)->update(array('completed' => 1));
+            return response()->json([
+                'message' => true,
+                'result' => "OK"
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => false,
+                'result' => "ERROR"
+            ], 403);
+        }
     }
 
     public function uncomplete_task(Request $request)
     {
-        $task = Task::find($request->id);
-        $task->completed = 0;
-        $task->save();
-
-        return response()->json([
-            'message' => true,
-            'result' => "OK"
-        ], 200);
+        $id = $request->id;
+        try {
+            Task::where('id', $id)->update(array('completed' => 0));
+            return response()->json([
+                'message' => true,
+                'result' => "OK"
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => false,
+                'result' => "ERROR"
+            ], 403);
+        }
     }
 }
