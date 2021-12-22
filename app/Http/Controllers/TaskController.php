@@ -62,6 +62,9 @@ class TaskController extends Controller
         $content = $request->content;
         $date = $request->date;
 
+        $parse_date = Carbon::parse($date);
+        $date = $parse_date->format('Y-m-d');
+
         $task = Task::find($request->id);
         $task->title = $title;
         $task->content = $content;
