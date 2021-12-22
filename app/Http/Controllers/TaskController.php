@@ -44,7 +44,7 @@ class TaskController extends Controller
         $task->title = $request->title;
         $task->content = $request->content;
         $task->date = $date;
-        $task->complated = 0;
+        $task->completed = 0;
         $task->user_id = $id;
         $task->updated_at = Carbon::now()->toDateTimeString();
         $task->save();
