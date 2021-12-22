@@ -105,7 +105,7 @@ class TaskController extends Controller
     {
         $id = $request->id;
         try {
-            Task::where('id', $id)->update(array('completed' => 1));
+            Task::where('id', $id)->update(array('completed' => 1, "date" => Carbon::now()->format("Y-m-d")));
             return response()->json([
                 'message' => true,
                 'result' => "OK"
