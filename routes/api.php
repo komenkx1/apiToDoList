@@ -36,6 +36,6 @@ Route::middleware('authApi:api')->group(function () {
     Route::delete('/task/{id}', [TaskController::class, "delete"])->name("delete_task");
     Route::put('/task/lastseen/{id}', [TaskController::class, "last_seen"])->name("last_seen_task");
 
-    Route::put('task/completed', [TaskController::class, "complete_task"])->name("complete_task");
+    Route::put('task-completed', [TaskController::class, "complete_task"])->name("complete_task");
     Route::put('task/uncompleted', [TaskController::class, "uncomplete_task"])->name("complete_task");
 });
