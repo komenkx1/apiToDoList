@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\LoginToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -34,6 +35,7 @@ class UserController extends Controller
 
         if ($request->file('avatarUrl')) {
           $filname = time() . $request->file('avatarUrl')->getClientOriginalName();
+           Storage::delete($user->avatar_url); // menghapus gambar atau file
           $path = $request->file('avatarUrl')->storeAs('upload/avatar', $filname);
         }
 
