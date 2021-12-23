@@ -14,8 +14,8 @@ class UserController extends Controller
   {
     $userData = $request->all();
     $loginData =  LoginToken::with('user')->where('token', $request->token)->first();
+    if(isset($loginData)){
     $user = $loginData->user;
-
     $response = [];
     $validator = Validator::make($request->all(), [
       "name" => ["required", "string"],
@@ -32,12 +32,17 @@ class UserController extends Controller
       return json_encode($response);
     } else {
 
+        if ($request->file('avatarUrl')) {
+          $filname = time() . $request->file('avatarUrl')->getClientOriginalName();
+          $path = $request->file('avatarUrl')->storeAs('upload/avatar', $filname);
+        }
 
       if (isset($userData["old_password"])) {
         if (Hash::check($userData["old_password"], $user->password)) {
           $user->update([
             "name" => $userData["name"],
             "username" => $userData["username"],
+            "avatar_url" => $path ?? $user->avatar_url,
             "password" => bcrypt($userData["new_password"])
           ]);
 
@@ -49,10 +54,6 @@ class UserController extends Controller
           $response["data"] = null;
         }
       } else {
-        if ($request->file('avatarUrl')) {
-          $filname = time() . $request->file('avatarUrl')->getClientOriginalName();
-          $path = $request->file('avatarUrl')->storeAs('avatar', $filname);
-        }
 
         $user->update([
           "name" => $userData["name"],
@@ -64,6 +65,10 @@ class UserController extends Controller
         $response["data"] = $user;
       }
     }
+}else{
+      $response["message"] = ["You Are Not Logged In"];
+        $response["data"] = null;
+}
     return json_encode($response);
   }
 

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::post('register', [RegisterController::class, "register"])->name("register");
-Route::patch('user/{token}', [UserController::class, "update"])->name("update");
+Route::post('user/{token}', [UserController::class, "update"])->name("update");
 Route::patch('user/notif-api-update/{token}', [UserController::class, "updateNotifToken"])->name("updateNotifToken");
 
 Route::post('login', [LoginController::class, "login"])->name("login");
