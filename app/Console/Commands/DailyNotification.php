@@ -43,11 +43,11 @@ class DailyNotification extends Command
         $dataTask = Task::whereDate('updated_at', '<', Carbon::today())
                     ->where('completed',0)->get();
         foreach ($dataTask as $task) {
-            $this->sendNotif($task->user->api_token, $task->user->username, $task->title);
+            $this->sendNotif($task->user->api_token, $task->user->username, $task->title, $task->id, $task->date, $task->content);
         }
     }
 
-    public function sendNotif($token, $username, $title)
+    public function sendNotif($token, $username, $title, $id, $date, $content)
     {
         $curl = curl_init();
 
@@ -68,7 +68,14 @@ class DailyNotification extends Command
 your task with title ' . $title . ' has not opened for 1 day.",
         "content_available" : true,
         "priority" : "high"
-    }
+    },
+    "data":{
+        "id" : "'.$id.'",
+        "title" : "'.$title.'",
+        "date" : "'.$date.'",
+        "content" : "'.$content.'",
+         
+        }
 
 }',
             CURLOPT_HTTPHEADER => array(
