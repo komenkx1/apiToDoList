@@ -13,6 +13,27 @@ use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class TaskController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $token_login = $request->header("Token-Login");
+        // $id = DB::select("SELECT user_id FROM `login_tokens` WHERE token=" . "'" . $token_login . "'")->get();
+        $id = DB::table('login_tokens')->where('token', '=', $token_login)->first();
+        $id = $id->user_id;
+        if (is_null($id)) {
+            return response()->json([
+                'message' => false
+            ], 403);
+        } else {
+            $task = new Task();
+            $task = DB::table('tasks')->where([['user_id', '=', $id]])->orderBy('updated_at', 'desc')->get();
+            return response()->json([
+                'message' => true,
+                'result' => $task,
+            ], 200);
+        }
+    }
+
     public function indexActive(Request $request)
     {
         $token_login = $request->header("Token-Login");
