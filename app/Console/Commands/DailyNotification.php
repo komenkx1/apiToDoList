@@ -63,7 +63,8 @@ class DailyNotification extends Command
             CURLOPT_POSTFIELDS => '{
     "to" : "' . $token . '",
     "notification" :  {
-        "title" : "Reminder",
+        "click_action" : ".activity.MainActivity", 
+        "title" : "DoIt",
         "body" :  "hey ' . $username . ', 
 your task with title ' . $title . ' has not opened for 1 day.",
         "content_available" : true,
