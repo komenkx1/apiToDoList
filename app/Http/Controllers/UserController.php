@@ -23,6 +23,7 @@ class UserController extends Controller
       "username" => ["required", "string", 'unique:users,username,' . $user->id],
       "old_password" => ["required_with:new_password"],
       "new_password" => ["required_with:old_password"],
+      "avatar_url" => [ "image|mimes:jpeg,png,jpg|max:2048"]
     ], [
         'username.unique' => 'This Username Cannot Be Use. Please Try Another Username',
     ]);

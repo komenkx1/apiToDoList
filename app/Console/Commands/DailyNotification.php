@@ -65,7 +65,7 @@ class DailyNotification extends Command
     "notification" :  {
         "title" : "Reminder",
         "body" :  "hey ' . $username . ', 
-there is still an unfinished task entitled ' . $title . '",
+your task with title ' . $title . ' has not opened for 1 day.",
         "content_available" : true,
         "priority" : "high"
     }
